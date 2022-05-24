@@ -38,7 +38,7 @@ function Movies() {
                     <Grid item xs={2} sm={4} md={4} key={index}>
                         <Item>
                             <h3>{movie.OriginalTitle}</h3>
-                            <Link to={`/${movie.ID}`}><img src={movie.Images.EventMediumImagePortrait} alt={movie.OriginalTitle}></img></Link>
+                            <Link to={`/${movie.ID}`}><img src={movie.Images.EventMediumImagePortrait} alt={movie.OriginalTitle} width="100%"></img></Link>
                         </Item>
                     </Grid>
                 ))}
