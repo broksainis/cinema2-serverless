@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import { Container, Row, Col, Table, Image } from 'react-bootstrap';
 import { useParams } from "react-router-dom";
-import { format } from 'date-fns';
+import { format } from 'date-fns'
 import { mergeMoviesWithSchedule } from './api/api';
 
 const moviesFetchUri = '/.netlify/functions/moviesFetch';
@@ -34,43 +28,50 @@ function Movie() {
     }, []);
 
     return (
-        <div>
-            {data && data.ShortSynopsis &&
-                <div>
-                    <p>{data.ShortSynopsis}</p>
-                </div>
-            }
-            {data && data.Events && data.Events.length > 0 &&
-                <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Atrašanās vieta</TableCell>
-                                <TableCell align="right">Seansa sākums</TableCell>
-                                <TableCell align="right">Valoda</TableCell>
-                                <TableCell align="right">Veids</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {data.Events.map((event) => (
-                                <TableRow
-                                    key={event.ID}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row">
-                                        {event.Theatre}
-                                    </TableCell>
-                                    <TableCell align="right">{format(new Date(event.dttmShowStart), 'yyyy-MM-dd HH:mm')}</TableCell>
-                                    <TableCell align="right">{event.SpokenLanguage.Name}</TableCell>
-                                    <TableCell align="right">{event.PresentationMethod}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            }
-        </div>
-
+        <Container>
+            <Row>
+                {data && data.Images &&
+                    <Col md={4}>
+                        <Image className="d-block mx-auto img-fluid w-100" src={data.Images.EventMediumImagePortrait} fluid={true}></Image>
+                    </Col>}
+                {data && data.ShortSynopsis &&
+                    <Col md={8}>
+                        <h1 className="text-center">{data.OriginalTitle}</h1>
+                        <p>{data.ShortSynopsis}</p>
+                        <p>{data.Genres}</p>
+                        <p>{data.RatingLabel}</p>
+                    </Col>
+                }
+            </Row>
+            <Row>
+                <Col>
+                    {data && data.Events && data.Events.length > 0 &&
+                        <Table striped bordered hover size="sm">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Vieta</th>
+                                    <th>Seansa sākums</th>
+                                    <th>Valoda</th>
+                                    <th>Veids</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.Events.map((e, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{e.Theatre}</td>
+                                        <td>{format(new Date(e.dttmShowStart), 'yyyy-MM-dd HH:mm')}</td>
+                                        <td>{e.SpokenLanguage.Name}</td>
+                                        <td>{e.PresentationMethod}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    }
+                </Col>
+            </Row>
+        </Container>
     );
 }
 
